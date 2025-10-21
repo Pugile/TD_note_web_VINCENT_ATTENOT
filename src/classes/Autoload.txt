@@ -1,0 +1,9 @@
+public class autoload {
+    private string $prefixe;
+    private string $racine;
+    public function __construct(string $prefixe, string $racine) {
+        $this->prefixe = $prefixe;
+        $this->racine = $racine;
+    }
+    
+}
