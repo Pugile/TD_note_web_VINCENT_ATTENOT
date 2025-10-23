@@ -1,5 +1,7 @@
 <?php
 
+namespace iutnc\deefy\auth;
+
 use iutnc\deefy\exception\AuthException;
 use iutnc\deefy\repository\DeefyRepository;
 

@@ -1,10 +1,12 @@
 <?php
 
+namespace iutnc\deefy\action;
 use iutnc\deefy\action\Action;
+use iutnc\deefy\auth\AuthnProvider;
 
 class SignInAction extends Action {
     public function execute() : string {
-        if ($this->http_method === 'POST') {
+        if ($this->http_method === 'GET') {
             return <<<FIN
             <div>
                 <form method="POST" action="main.php?action=signin">

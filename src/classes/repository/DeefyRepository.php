@@ -2,57 +2,70 @@
 
 declare(strict_types=1);
 namespace iutnc\deefy\repository;
-
 use iutnc\deefy\audio\lists\Playlist;
-use iutnc\deefy\audio\tracks\AlbumTrack;
+use PDO;
 
-class DeefyRepository {
+class DeefyRepository{
     private \PDO $pdo;
-    static private array $config;
-    static private ?DeefyRepository $instance = null;
+    private static ?DeefyRepository $instance = null;
+    private static array $config = [ ];
 
-    public static function setConfig(String $file) {
-        if (!file_exists($file)) {
-            throw new \Exception("Le fichier de configuration n'existe pas.");
-        }
-        $config = parse_ini_file($file, true);
-        if ($config === false) {
-            throw new \Exception("Erreur lors de la lecture du fichier de configuration.");
-        }
-        $driver = $config['driver'];
-        $host = $config['host'];
-        $database = $config['database'];
-        $dsn = "$driver:host=$host;dbname=$database";
-        self::$config = [
-            'dsn' => $dsn,
-            'user' => $config['username'],
-            'password' => $config['password']
-        ];
-        
+    private function __construct(array $conf) {
+        $this->pdo = new \PDO($conf['dsn'], $conf['user'], $conf['pass'],
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     }
-
-    public static function getInstance() : DeefyRepository {
-        if (self::$instance === null) {
-            self::$instance = new DeefyRepository();
+    public static function getInstance(){
+        if (is_null(self::$instance)) {
+        self::$instance = new DeefyRepository(self::$config);
         }
         return self::$instance;
     }
-
-    public function findPlaylistbyId(int $id) {
-        // À implémenter plus tard
+    public static function setConfig(string $file) {
+        $conf = parse_ini_file($file);
+        if ($conf === false) {
+        throw new \Exception("Error reading configuration file");
+        }
+        $driver = $conf['driver'];
+        $host = $conf['host'];
+        $database = $conf['database'];
+        self::$config = [ 
+            'dsn'=> "$driver:host=$host;dbname=$database;charset=utf8mb4",
+            'user'=> $conf['username'],
+            'pass'=> $conf['password'] ];
     }
-
-    public function getListPlaylists(): array {
+    // public function findPlaylistById(int $id): Playlist {
+    //     return new Playlist();
+    // }
+    // public function saveEmptyPlaylist(Playlist $pl): Playlist {
+    //         $query = "INSERT INTO playlist (nom) VALUES (:nom)";
+    //         $stmt = $this->pdo->prepare($query);
+    //         $stmt->execute(['nom' => $pl->nom]);
+    //         $pl->setID((int) $this->pdo->lastInsertId());
+    //         return $pl;
         
-    }
+    //  }
+    public function getHashUser(String $email): ?String {
+            $query = "SELECT passwd FROM User WHERE email = :email";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['email' => $email]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return (isset($result['passwd'])) ? $result['passwd']:null;
 
-    public function getHashUser(string $email): string {
-        $query = "SELECT passwd FROM User WHERE email = :email";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['email' => $email]);
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return (isset($result['passwd'])) ? $result['passwd']:null;
-    }
+     }
+
+     public function addUser(string $email, string $hash): void {
+            $query = "INSERT INTO User (email, passwd) VALUES (:email, :passwd)";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['email' => $email, 'passwd' => $hash]);
+     }
+
+     public function userExists(string $email): bool {
+            $query = "SELECT COUNT(*) as count FROM User WHERE email = :email";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['email' => $email]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return ($result['count'] > 0);
+     }
+
+
 }
-
-
