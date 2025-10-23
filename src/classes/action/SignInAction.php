@@ -22,10 +22,12 @@ class SignInAction extends Action {
             $mail = $_POST['username']; //pas besoin de filtrer
 
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                AuthnProvider::signin($mail, $_POST['password']);
                 
             } else {
                 return "Échec de la connexion. Veuillez vérifier vos informations d'identification.";
             }
+            return "Connexion réussie !";
         }
     }
 }

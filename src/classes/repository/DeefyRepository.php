@@ -7,7 +7,7 @@ use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\AlbumTrack;
 
 class DeefyRepository {
-
+    private \PDO $pdo;
     static private array $config;
     static private ?DeefyRepository $instance = null;
 
@@ -44,6 +44,14 @@ class DeefyRepository {
 
     public function getListPlaylists(): array {
         
+    }
+
+    public function getHashUser(string $email): string {
+        $query = "SELECT passwd FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return (isset($result['passwd'])) ? $result['passwd']:null;
     }
 }
 

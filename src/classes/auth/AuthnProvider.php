@@ -1,13 +1,14 @@
 <?php
 
 use iutnc\deefy\exception\AuthException;
+use iutnc\deefy\repository\DeefyRepository;
 
 class AuthnProvider {
     public static function signin(string $email, string $passwd2check): void {
-        $user = "select passwd from User where email = ? ";
-        if (!password_verify($passwd2check, $user->pass))
+        $hash = DeefyRepository::getInstance()->getHashUser($email);
+        if (!password_verify($passwd2check, $hash))
             throw new AuthException("Auth error : invalid credentials");
-        $_SESSION['user'] = serialize($user);
+        $_SESSION['user'] = serialize($email);
         return ;
     }
 //     public static function getSignedInUser( ): User {
