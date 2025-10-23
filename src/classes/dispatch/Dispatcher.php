@@ -8,6 +8,7 @@ use iutnc\deefy\action\DisplayPlaylistAction;
 use iutnc\deefy\action\AddPodcastTrackAction;
 use iutnc\deefy\action\DefaultAction;
 use iutnc\deefy\action\SignInAction;
+use iutnc\deefy\action\InscriptionAction;
 
 class Dispatcher {
     public string $action;
@@ -30,6 +31,9 @@ class Dispatcher {
             case 'signin':
                 $actionInstance = (new SignInAction())->execute();
                 break;
+            case 'inscription':
+                $actionInstance = (new InscriptionAction())->execute();
+                break;
             default:
                 $actionInstance = (new DefaultAction())->execute();
                 break;
@@ -49,6 +53,7 @@ class Dispatcher {
                             <li><a href="main.php?action=add_playlist">Ajouter une playlist</a></li>
                             <li><a href="main.php?action=playlist">Afficher la playlist</a></li>
                             <li><a href="main.php?action=add_track">Ajouter une piste de podcast</a></li>
+                            <li><a href="main.php?action=inscription">S'inscrire</a></li>
                             <li><a href="main.php?action=signin">Se connecter</a></li>
                         </ul>
                         $html
