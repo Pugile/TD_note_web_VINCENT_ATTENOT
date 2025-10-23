@@ -16,7 +16,10 @@ class AuthnProvider {
 
     public static function register(string $email, string $passwd): void {
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new AuthException("Auth error : invalid email format");
+            throw new AuthException("Auth error : format invalide");
+        }
+        if (DeefyRepository::getInstance()->getHashUser($email) !== null) {
+            throw new AuthException("Auth error : l'utilisateur existe déjà");
         }
         $hash = password_hash($passwd, PASSWORD_DEFAULT, ['cost' => 12]);
         DeefyRepository::getInstance()->addUser($email, $hash);
