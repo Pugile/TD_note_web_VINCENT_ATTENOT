@@ -14,7 +14,8 @@ class DeefyRepository{
         $this->pdo = new \PDO($conf['dsn'], $conf['user'], $conf['pass'],
         [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     }
-    public static function getInstance(){
+    public static function getInstance(): DeefyRepository
+    {
         if (is_null(self::$instance)) {
         self::$instance = new DeefyRepository(self::$config);
         }
@@ -65,6 +66,10 @@ class DeefyRepository{
             $stmt->execute(['email' => $email]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return ($result['count'] > 0);
+     }
+
+     public function getPdo(): PDO {
+        return $this->pdo;
      }
 
 
