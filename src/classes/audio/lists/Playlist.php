@@ -38,5 +38,13 @@ class Playlist extends AudioList {
         return parent::__get($name);
     }
 
+    public function setNbTracks($nb_pistes) {
+        $this->nbPistes = $nb_pistes;
+    }
+
+    public function setDuration($param) {
+        $this->dureeTotale = $param;
+    }
+
 
 }

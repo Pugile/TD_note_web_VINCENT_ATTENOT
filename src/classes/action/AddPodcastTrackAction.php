@@ -43,7 +43,6 @@ class AddPodcastTrackAction extends Action {
                 $numero_album = filter_var($_POST['numero_album'], FILTER_SANITIZE_STRING);
                 $playlist_name = filter_var($_POST['playlist_name'], FILTER_SANITIZE_STRING);
                 if (substr($_FILES['userfile']['name'], -4) === '.mp3') {
-                    $nomfile = $_FILES['userfile']['name'];
                     $randomname = bin2hex(random_bytes(8)) . '.mp3';
                     $destination = __DIR__ . "/../audio/$randomname";
                     var_dump($destination);
@@ -63,7 +62,7 @@ class AddPodcastTrackAction extends Action {
                     'titre' => $piste_name,
                     'genre' => $genre,
                     'duree' => $duree,
-                    'filename' => $nomfile,
+                    'filename' => $randomname,
                     'artiste_album' => $auteur,
                     'titre_album' => $titre_album,
                     'annee_album' => $annee_album,
