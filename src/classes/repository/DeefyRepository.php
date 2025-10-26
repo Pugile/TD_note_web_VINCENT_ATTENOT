@@ -34,15 +34,25 @@ class DeefyRepository{
             'user'=> $conf['username'],
             'pass'=> $conf['password'] ];
     }
-    // public function findPlaylistById(int $id): Playlist {
-    //     return new Playlist();
-    // }
-    // public function saveEmptyPlaylist(Playlist $pl): Playlist {
-    //         $query = "INSERT INTO playlist (nom) VALUES (:nom)";
-    //         $stmt = $this->pdo->prepare($query);
-    //         $stmt->execute(['nom' => $pl->nom]);
-    //         $pl->setID((int) $this->pdo->lastInsertId());
-    //         return $pl;
+     public function findPlaylistById(int $id): Playlist {
+         $query = "SELECT * FROM Playlist WHERE id = :id";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['id' => $id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                $query2 = "SELECT * FROM track inner join playlist2track on playlist2track.id_track = track.id  WHERE id_pl = :id_pl";
+                $stmt2 = $this->pdo->prepare($query2);
+                $stmt2->execute(['id_pl' => $id]);
+                $tracks = [];
+                while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                    $tracks[] = $row;
+                }
+                return new Playlist($result['nom'], $tracks);
+
+
+            }
+            throw new \Exception("Playlist not found");
+     }
         
     //  }
     public function getHashUser(String $email): ?String {

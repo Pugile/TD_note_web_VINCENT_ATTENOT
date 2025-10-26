@@ -3,6 +3,7 @@
 namespace iutnc\deefy\action;
 use iutnc\deefy\audio\tracks\PodcastTrack;
 use iutnc\deefy\repository\DeefyRepository;
+use getID3;
 
 class AddPodcastTrackAction extends Action {
 
@@ -42,6 +43,9 @@ class AddPodcastTrackAction extends Action {
                 $annee_album = filter_var($_POST['annee_album'], FILTER_SANITIZE_STRING);
                 $numero_album = filter_var($_POST['numero_album'], FILTER_SANITIZE_STRING);
                 $playlist_name = filter_var($_POST['playlist_name'], FILTER_SANITIZE_STRING);
+                $get3ID = new getID3;
+                $fileInfo = $get3ID->analyze($_FILES['userfile']['tmp_name']);
+                $duree = (int)($fileInfo['playtime_seconds'] ?? 0);
                 if (substr($_FILES['userfile']['name'], -4) === '.mp3') {
                     $randomname = bin2hex(random_bytes(8)) . '.mp3';
                     $destination = __DIR__ . "/../audio/$randomname";
@@ -56,8 +60,7 @@ class AddPodcastTrackAction extends Action {
 
 
                 $query = "INSERT INTO track (titre, genre, duree, filename, artiste_album, titre_album, annee_album, numero_album) VALUES (:titre, :genre, :duree, :filename, :artiste_album, :titre_album, :annee_album, :numero_album)";
-                $stmt = DeefyRepository::getInstance()->getPdo()->prepare($query);
-                $duree = 0; // Durée par défaut, à ajuster selon les besoins
+                $stmt = DeefyRepository::getInstance()->getPdo()->prepare($query);// Durée par défaut, à ajuster selon les besoins
                 $stmt ->execute([
                     'titre' => $piste_name,
                     'genre' => $genre,

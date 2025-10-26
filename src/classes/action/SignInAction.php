@@ -3,9 +3,18 @@
 namespace iutnc\deefy\action;
 use iutnc\deefy\action\Action;
 use iutnc\deefy\auth\AuthnProvider;
+use iutnc\deefy\exception\AuthException;
 
 class SignInAction extends Action {
+    /**
+     * @throws AuthException
+     */
     public function execute() : string {
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if ($this->http_method === 'GET') {
             return <<<FIN
             <div>
@@ -25,10 +34,11 @@ class SignInAction extends Action {
 
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
                 AuthnProvider::signin($mail, $_POST['password']);
-                
+
             } else {
                 return "Échec de la connexion. Veuillez vérifier vos informations d'identification.";
             }
+            $_SESSION['user'] = $mail;
             return "Connexion réussie !";
         }
     }

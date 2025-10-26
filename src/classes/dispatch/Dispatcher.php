@@ -16,14 +16,15 @@ class Dispatcher {
     public function __construct(string $action) {
         $this->action = $action;
     }
+
+    /**
+     * @throws \Exception
+     */
     public function run() : void {
 
         switch ($this->action) {
             case 'add_playlist':
                 $actionInstance = (new AddPlaylistAction())->execute();
-                break;
-            case 'playlist':
-                $actionInstance = (new DisplayPlaylistAction())->execute();
                 break;
             case 'add_track':
                 $actionInstance = (new AddPodcastTrackAction())->execute();
@@ -33,6 +34,9 @@ class Dispatcher {
                 break;
             case 'inscription':
                 $actionInstance = (new InscriptionAction())->execute();
+                break;
+            case 'playlist_id':
+                $actionInstance = (new DisplayPlaylistAction())->execute();
                 break;
             default:
                 $actionInstance = (new DefaultAction())->execute();
@@ -51,8 +55,8 @@ class Dispatcher {
                     <body>
                         <ul>
                             <li><a href="main.php?action=add_playlist">Ajouter une playlist</a></li>
-                            <li><a href="main.php?action=playlist">Afficher la playlist</a></li>
-                            <li><a href="main.php?action=add_track">Ajouter une piste de podcast</a></li>
+                            <li><a href="main.php?action=playlist_id">Trouver une playlist</li>
+                            <li><a href="main.php?action=add_track">Ajouter une piste</a></li>
                             <li><a href="main.php?action=inscription">S'inscrire</a></li>
                             <li><a href="main.php?action=signin">Se connecter</a></li>
                         </ul>

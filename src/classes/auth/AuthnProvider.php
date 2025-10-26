@@ -2,6 +2,7 @@
 
 namespace iutnc\deefy\auth;
 
+use Couchbase\User;
 use iutnc\deefy\exception\AuthException;
 use iutnc\deefy\repository\DeefyRepository;
 
@@ -10,7 +11,7 @@ class AuthnProvider {
         $hash = DeefyRepository::getInstance()->getHashUser($email);
         if (!password_verify($passwd2check, $hash))
             throw new AuthException("Auth error : invalid credentials");
-        $_SESSION['user'] = serialize($email);
+        $_SESSION['user'] = $email;
         return ;
     }
 
@@ -23,13 +24,28 @@ class AuthnProvider {
         }
         $hash = password_hash($passwd, PASSWORD_DEFAULT, ['cost' => 12]);
         DeefyRepository::getInstance()->addUser($email, $hash);
-        $_SESSION['user'] = serialize($email);
+        $_SESSION['user'] = ($email);
         return ;
     }
 
-//     public static function getSignedInUser( ): User {
-//         if ( !isset($_SESSION['user']))
-//             throw new AuthException("Auth error : not signed in");
-//         return unserialize($_SESSION['user'] ) ;
-//     }
+    /**
+     * @throws AuthException
+     */
+    public static function getSignedInUser( ): string {
+         if (session_status() !== PHP_SESSION_ACTIVE) {
+             session_start();
+         }
+         if ( !isset($_SESSION['user']))
+             throw new AuthException("Auth error : not signed in");
+         return ($_SESSION['user'] ) ;
+    }
+
+    public static function getInstance(): AuthnProvider
+    {
+        static $instance = null;
+        if (is_null($instance)) {
+            $instance = new AuthnProvider();
+        }
+        return $instance;
+    }
 }
