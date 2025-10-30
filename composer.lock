@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1df2496dd2a4daabba36792ed5e23637",
+    "content-hash": "357d643fcf6af230c51c9b248cb42014",
     "packages": [
         {
             "name": "james-heinrich/getid3",
@@ -81,7 +81,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-couchbase": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"

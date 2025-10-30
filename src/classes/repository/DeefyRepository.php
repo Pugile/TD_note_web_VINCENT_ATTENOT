@@ -34,25 +34,58 @@ class DeefyRepository{
             'user'=> $conf['username'],
             'pass'=> $conf['password'] ];
     }
-     public function findPlaylistById(int $id): Playlist {
-         $query = "SELECT * FROM Playlist WHERE id = :id";
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute(['id' => $id]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($result) {
-                $query2 = "SELECT * FROM track inner join playlist2track on playlist2track.id_track = track.id  WHERE id_pl = :id_pl";
-                $stmt2 = $this->pdo->prepare($query2);
-                $stmt2->execute(['id_pl' => $id]);
-                $tracks = [];
-                while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                    $tracks[] = $row;
-                }
-                return new Playlist($result['nom'], $tracks);
+public function findPlaylistById(int $id): Playlist {
+    $query = "SELECT * FROM playlist WHERE id = :id";
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute(['id' => $id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) throw new \Exception("Playlist non trouvée.");
+
+    // 🔹 Récupération des pistes associées
+    $query2 = <<<SQL
+        SELECT t.id, t.titre, t.genre, t.duree, t.filename, t.type,
+               t.artiste_album, t.titre_album, t.annee_album, t.numero_album
+        FROM track t
+        JOIN playlist2track p2t ON t.id = p2t.id_track
+        WHERE p2t.id_pl = :id_pl
+        ORDER BY p2t.no_piste_dans_liste
+    SQL;
+    $stmt2 = $this->pdo->prepare($query2);
+    $stmt2->execute(['id_pl' => $id]);
+    $tracks = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+    // 🧮 Calcul durée totale
+    $dureeTotale = 0;
+    foreach ($tracks as $t) {
+        $dureeTotale += (int)($t['duree'] ?? 0);
+    }
+
+    // 🔹 Création de la playlist complète
+    $playlist = new Playlist($result['nom'], $tracks);
+    $playlist->setNbTracks(count($tracks));
+    $playlist->setDuration($dureeTotale);
+
+    return $playlist;
+}
 
 
-            }
-            throw new \Exception("Playlist not found");
-     }
+    
+    public function findPlaylistsByUser(string $email): array {
+        $query = <<<SQL
+            SELECT p.id, p.nom
+            FROM playlist p
+            JOIN user2playlist u2p ON p.id = u2p.id_pl
+            JOIN `User` u ON u.id = u2p.id_user
+            WHERE u.email = :email
+            ORDER BY p.nom
+        SQL;
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $rows ?: [];
+    }
         
     //  }
     public function getHashUser(String $email): ?String {

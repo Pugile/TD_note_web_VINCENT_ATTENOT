@@ -38,6 +38,13 @@ class Dispatcher {
             case 'playlist_id':
                 $actionInstance = (new DisplayPlaylistAction())->execute();
                 break;
+            case 'mes_playlists':
+                $actionInstance = (new \iutnc\deefy\action\MesPlaylistsAction())->execute();
+                break;
+            case 'set_current_playlist':
+                $actionInstance = (new \iutnc\deefy\action\SetCurrentPlaylistAction())->execute();
+                break;
+
             default:
                 $actionInstance = (new DefaultAction())->execute();
                 break;
@@ -51,12 +58,16 @@ class Dispatcher {
                 <html lang="fr">
                     <head>
                         <title>DeeFy</title>
+                        <link rel="stylesheet" href="css/style.css">
+
                     </head>
                     <body>
                         <ul>
                             <li><a href="main.php?action=add_playlist">Ajouter une playlist</a></li>
-                            <li><a href="main.php?action=playlist_id">Trouver une playlist</li>
+                            
                             <li><a href="main.php?action=add_track">Ajouter une piste</a></li>
+                            <li><a href="main.php?action=mes_playlists">Mes playlists</a></li>
+                            <li><a href="main.php?action=playlist_id">Playlist Courante</li>
                             <li><a href="main.php?action=inscription">S'inscrire</a></li>
                             <li><a href="main.php?action=signin">Se connecter</a></li>
                         </ul>

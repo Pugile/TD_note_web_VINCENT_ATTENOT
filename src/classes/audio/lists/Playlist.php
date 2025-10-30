@@ -1,11 +1,16 @@
 <?php
 declare(strict_types=1);
 namespace iutnc\deefy\audio\lists;
+
 use iutnc\deefy\audio\tracks\AudioTrack;
-use iutnc\deefy\audio\lists\AudioList;
 
 class Playlist extends AudioList {
-    public function ajouterPiste(AudioTrack $piste) : void {
+
+    public function __construct(string $nom, array $pistes = []) {
+        parent::__construct($nom, $pistes);
+    }
+
+    public function ajouterPiste(AudioTrack $piste): void {
         foreach ($this->pistes as $p) {
             if ($p === $piste) return;
         }
@@ -14,7 +19,7 @@ class Playlist extends AudioList {
         $this->dureeTotale += $piste->duree;
     }
 
-    public function supprimerPiste(int $indice) : void {
+    public function supprimerPiste(int $indice): void {
         if (isset($this->pistes[$indice])) {
             $piste = $this->pistes[$indice];
             $this->dureeTotale -= $piste->duree;
@@ -23,7 +28,7 @@ class Playlist extends AudioList {
         }
     }
 
-    public function ajouterListePistes(array $pistesAAjouter) : void {
+    public function ajouterListePistes(array $pistesAAjouter): void {
         foreach ($pistesAAjouter as $piste) {
             if ($piste instanceof AudioTrack) {
                 $this->ajouterPiste($piste);
@@ -38,13 +43,11 @@ class Playlist extends AudioList {
         return parent::__get($name);
     }
 
-    public function setNbTracks($nb_pistes) {
+    public function setNbTracks($nb_pistes): void {
         $this->nbPistes = $nb_pistes;
     }
 
-    public function setDuration($param) {
+    public function setDuration($param): void {
         $this->dureeTotale = $param;
     }
-
-
 }

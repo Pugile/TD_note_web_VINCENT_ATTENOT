@@ -52,44 +52,65 @@ class DisplayPlaylistAction extends Action {
      * @throws \Exception
      */
     public function execute(): string
-    {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
-        }
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
 
+    $pdo = DeefyRepository::getInstance()->getPdo();
 
+    // Si c'est un GET et qu'on a une playlist courante → on l'affiche directement
+    if ($this->http_method === 'GET') {
+        if (isset($_SESSION['playlist_courante'])) {
+            $id = $_SESSION['playlist_courante'];
 
-        if ($this->http_method === 'GET') {
-            return <<<HTML
-            <form method="POST" action="main.php?action=playlist_id">
-                <label for="id_playlist">ID de la playlist :</label>
-                <input type="number" id="id_playlist" name="id_playlist" required>
-                <input type="submit" value="Afficher la playlist">
-            </form>
-            HTML;
-        }
-
-        if ($this->http_method === 'POST') {
-            $id = filter_input(INPUT_POST, 'id_playlist', FILTER_VALIDATE_INT);
-            if ($id === false || $id === null || $id <= 0) {
-                return "ID de playlist invalide.";
-            }
-
+            // Vérifie que l'utilisateur a bien le droit
             if (!Authnz::getInstance()->checkPlaylistOwner($id)) {
                 throw new \Exception("Vous n'êtes pas autorisé à accéder à cette playlist.");
             }
 
-
             $playlist = DeefyRepository::getInstance()->findPlaylistById((int)$id);
 
-            $output = "<h1>Playlists</h1>";
+            $output = $playlist->nom;
             $renderer = new AudioListRenderer($playlist);
-
-            $renderer->render(Renderer::LONG);
+            $output .= $renderer->render(Renderer::LONG);
 
             return $output;
         }
 
-        return "Méthode HTTP non supportée.";
+        // Sinon, aucun id de playlist connu → on montre le formulaire
+        return <<<HTML
+        <form method="POST" action="main.php?action=playlist_id">
+            <label for="id_playlist">ID de la playlist :</label>
+            <input type="number" id="id_playlist" name="id_playlist" required>
+            <input type="submit" value="Afficher la playlist">
+        </form>
+        HTML;
     }
+
+    // Si c'est un POST (ancien comportement)
+    if ($this->http_method === 'POST') {
+        $id = filter_input(INPUT_POST, 'id_playlist', FILTER_VALIDATE_INT);
+        if ($id === false || $id === null || $id <= 0) {
+            return "ID de playlist invalide.";
+        }
+
+        if (!Authnz::getInstance()->checkPlaylistOwner($id)) {
+            throw new \Exception("Vous n'êtes pas autorisé à accéder à cette playlist.");
+        }
+
+        // Met en session la playlist courante
+        $_SESSION['playlist_courante'] = $id;
+
+        $playlist = DeefyRepository::getInstance()->findPlaylistById((int)$id);
+        $output = "<h1>Playlist sélectionnée : " . htmlspecialchars($playlist->nom) . "</h1>";
+        $renderer = new AudioListRenderer($playlist);
+        $output .= $renderer->render(Renderer::LONG);
+
+        return $output;
+    }
+
+    return "Méthode HTTP non supportée.";
+}
+
 }
