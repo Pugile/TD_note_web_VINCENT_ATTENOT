@@ -80,7 +80,7 @@ class AddPodcastTrackAction extends Action
 
             // --- Sauvegarde du fichier ---
             // Sur webetu, les fichiers doivent être accessibles via un sous-dossier public
-            $uploadDir = __DIR__ . "/../audio";
+            $uploadDir = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'audio';
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
             $randomName = bin2hex(random_bytes(6)) . ".mp3";
