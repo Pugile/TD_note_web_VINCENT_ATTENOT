@@ -73,7 +73,9 @@ class DisplayPlaylistAction extends Action {
 
             $output = $playlist->nom;
             $renderer = new AudioListRenderer($playlist);
-            $output .= $renderer->render(Renderer::LONG);
+ob_start();
+$renderer->render(Renderer::LONG);
+$output .= ob_get_clean();
 
             return $output;
         }
@@ -105,7 +107,9 @@ class DisplayPlaylistAction extends Action {
         $playlist = DeefyRepository::getInstance()->findPlaylistById((int)$id);
         $output = "<h1>Playlist sélectionnée : " . htmlspecialchars($playlist->nom) . "</h1>";
         $renderer = new AudioListRenderer($playlist);
-        $output .= $renderer->render(Renderer::LONG);
+ob_start();
+$renderer->render(Renderer::LONG);
+$output .= ob_get_clean();
 
         return $output;
     }

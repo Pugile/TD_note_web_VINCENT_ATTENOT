@@ -54,26 +54,36 @@ class Dispatcher {
 
         public function renderPage(string $html) : string {
                 $page = <<<HTML
-                <!DOCTYPE html>
-                <html lang="fr">
-                    <head>
-                        <title>DeeFy</title>
-                        <link rel="stylesheet" href="css/style.css">
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DeeFy</title>
+    <link rel="stylesheet" href="./css/style.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">🎵 DeeFy</div>
+      <nav class="nav-links">
+        <a href="main.php?action=add_playlist">+ Playlist</a>
+        <a href="main.php?action=add_track">+ Piste</a>
+        <a href="main.php?action=mes_playlists">Mes playlists</a>
+        <a href="main.php?action=playlist_id">Playlist courante</a>
+        <a href="main.php?action=inscription">Inscription</a>
+        <a href="main.php?action=signin" class="btn-main">Connexion</a>
+      </nav>
+    </header>
 
-                    </head>
-                    <body>
-                        <ul>
-                            <li><a href="main.php?action=add_playlist">Ajouter une playlist</a></li>
-                            
-                            <li><a href="main.php?action=add_track">Ajouter une piste</a></li>
-                            <li><a href="main.php?action=mes_playlists">Mes playlists</a></li>
-                            <li><a href="main.php?action=playlist_id">Playlist Courante</li>
-                            <li><a href="main.php?action=inscription">S'inscrire</a></li>
-                            <li><a href="main.php?action=signin">Se connecter</a></li>
-                        </ul>
-                        $html
-                    </body>
-                </html>
+    <main class="content">
+      $html
+    </main>
+
+    <footer class="app-footer">
+      © <?php echo date('Y'); ?> DeeFy — Projet IUT.
+    </footer>
+  </body>
+</html>
 HTML;
 
                 return $page;
