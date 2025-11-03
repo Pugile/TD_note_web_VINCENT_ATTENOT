@@ -18,12 +18,10 @@ class AudioListRenderer implements Renderer {
         // Début du conteneur principal
         echo "<div class='playlist-container'>";
 
-        // 🟢 En-tête de la playlist
         echo "<div class='playlist-header'>";
         echo "<h2>🎶 Playlist courante : <span>" . htmlspecialchars($this->liste->nom) . "</span></h2>";
         echo "</div>";
 
-        // 🟣 Liste des pistes
         echo "<div class='track-list'>";
 
         $audioDir = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'audio';
@@ -35,7 +33,6 @@ class AudioListRenderer implements Renderer {
 
                 echo "<div class='track'>";
 
-                // 🔹 Si la piste vient de la BDD (tableau associatif)
                 if (is_array($piste)) {
                     $titre = htmlspecialchars($piste['titre'] ?? 'Sans titre');
                     $duree = (int)($piste['duree'] ?? 0);
@@ -57,27 +54,25 @@ class AudioListRenderer implements Renderer {
                     }
                 }
 
-                // 🔹 Si c’est un objet AudioTrack
                 elseif ($piste instanceof AudioTrack) {
                     $titre = htmlspecialchars($piste->titre);
                     echo "<p><strong>" . sprintf('%02d', $index + 1) . " - $titre</strong></p>";
                     echo "<audio controls src='audio/" . htmlspecialchars($piste->chemin) . "'></audio>";
                 }
 
-                echo "</div>"; // fin .track
+                echo "</div>";
             }
         } else {
             echo "<p class='no-track'>Aucune piste pour cette playlist.</p>";
         }
 
-        echo "</div>"; // fin .track-list
+        echo "</div>";
 
-        // 🟠 Pied d’infos (durée totale et nombre de pistes)
         echo "<div class='playlist-info'>";
         echo "<p><b>Nombre de pistes :</b> " . (int)$this->liste->nbPistes . 
              " &nbsp;|&nbsp; <b>Durée totale :</b> " . gmdate("i:s", (int)$this->liste->dureeTotale) . "</p>";
         echo "</div>";
 
-        echo "</div>"; // fin .playlist-container
+        echo "</div>";
     }
 }
