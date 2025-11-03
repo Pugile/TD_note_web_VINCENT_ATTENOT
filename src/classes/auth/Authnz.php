@@ -13,7 +13,7 @@ class Authnz {
      */
     public function checkRole() : int {
         $user = AuthnProvider::getInstance()->getSignedInUser();
-        $query = "Select role from user where email = :email";
+        $query = "Select role from User where email = :email";
         $stmt = DeefyRepository::getInstance()->getPdo()->prepare($query);
         $stmt->execute(['email' => $user]);
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -25,7 +25,7 @@ class Authnz {
      */
     public function checkPlaylistOwner(int $playlist_id) : bool {
         $user = AuthnProvider::getInstance()->getSignedInUser();
-        $query = "Select count(*) from user2playlist where id_pl = :id_pl and id_user = (Select id from user where email = :email)";
+        $query = "Select count(*) from user2playlist where id_pl = :id_pl and id_user = (Select id from User where email = :email)";
         $stmt = DeefyRepository::getInstance()->getPdo()->prepare($query);
         $stmt->execute(['id_pl' => $playlist_id, 'email' => $user]);
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);

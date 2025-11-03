@@ -60,27 +60,27 @@ class Dispatcher {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DeeFy</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="/~attenot12u/BUT2/S2/ProjetWeb/css/style.css">
   </head>
   <body>
     <header class="app-header">
       <div class="brand">🎵 DeeFy</div>
-      <nav class="nav-links">
-        <a href="main.php?action=add_playlist">+ Playlist</a>
-        <a href="main.php?action=add_track">+ Piste</a>
+      <nav class="main-nav">
+        <a href="main.php?action=add_playlist">Ajouter une playlist</a>
+        <a href="main.php?action=add_track">Ajouter une piste</a>
         <a href="main.php?action=mes_playlists">Mes playlists</a>
         <a href="main.php?action=playlist_id">Playlist courante</a>
-        <a href="main.php?action=inscription">Inscription</a>
-        <a href="main.php?action=signin" class="btn-main">Connexion</a>
+        <a href="main.php?action=inscription">S'inscrire</a>
+        <a href="main.php?action=signin" class="btn">Se connecter</a>
       </nav>
     </header>
 
-    <main class="content">
+    <main class="container">
       $html
     </main>
 
     <footer class="app-footer">
-      © <?php echo date('Y'); ?> DeeFy — Projet IUT.
+      <small>&copy; <?php echo date('Y'); ?> DeeFy — Projet IUT. </small>
     </footer>
   </body>
 </html>

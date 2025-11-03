@@ -22,7 +22,7 @@ try {
 	// Album
 	$album = new Album('Mon Album', [$piste1], 'artiste1', '2020-01-01');
 	$albumRenderer = new AudioListRenderer($album);
-	echo '<h2>Affichage Album (AudioListRenderer)</h2>';
+// 	echo '<h2>Affichage Album (AudioListRenderer)</h2>';
 	$albumRenderer->render(1);
 
 	// Playlist
@@ -30,20 +30,20 @@ try {
 	$playlist->ajouterPiste($piste1);
 	$playlist->ajouterPiste($piste2);
 	$playlistRenderer = new AudioListRenderer($playlist);
-	echo '<h2>Affichage Playlist (AudioListRenderer)</h2>';
+// 	echo '<h2>Affichage Playlist (AudioListRenderer)</h2>';
 	$playlistRenderer->render(1);
 
 
 
 } catch (InvalidPropertyNameException $e) {
-	echo 'Erreur propriété : ' . $e->getMessage() . "<br>";
-	echo nl2br($e->getTraceAsString());
+// 	echo 'Erreur propriété : ' . $e->getMessage() . "<br>";
+// 	echo nl2br($e->getTraceAsString());
 } catch (InvalidPropertyValueException $e) {
-	echo 'Erreur valeur : ' . $e->getMessage() . "<br>";
-	echo nl2br($e->getTraceAsString());
+// 	echo 'Erreur valeur : ' . $e->getMessage() . "<br>";
+// 	echo nl2br($e->getTraceAsString());
 } catch (Exception $e) {
-	echo 'Autre erreur : ' . $e->getMessage() . "<br>";
-	echo nl2br($e->getTraceAsString());
+// 	echo 'Autre erreur : ' . $e->getMessage() . "<br>";
+// 	echo nl2br($e->getTraceAsString());
 }
 
 

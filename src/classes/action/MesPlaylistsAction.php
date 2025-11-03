@@ -11,7 +11,7 @@ class MesPlaylistsAction extends Action {
             session_start();
         }
 
-        // user must be signed in
+        
         try {
             $email = AuthnProvider::getInstance()->getSignedInUser();
         } catch (\Exception $e) {
